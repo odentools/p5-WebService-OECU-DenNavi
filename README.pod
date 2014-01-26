@@ -1,0 +1,26 @@
+=head1 NAME
+
+WebService::OECU::DenNavi - OECU DENNavi Client module for Perl5
+
+=head1 SYNOPSIS
+
+  use WebService::OECU::DenNavi;
+
+  my $client = WebService::OECU::DenNavi->new(
+	username => 'ht11a000',
+	password => 'foobar',
+  );
+  
+  # Fetch a list of corporates
+  my $response = $client->corporate()->fetch_list();
+  while ( my $co = $response->next ){
+      print $co->name ."(". $co->id .")\n";
+  }
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2014 OdenTools Project (https://sites.google.com/site/odentools/), Masanori Ohgita (http://ohgita.info/).
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3 (GPL v3).
+
+See LICENSE.txt for details.
