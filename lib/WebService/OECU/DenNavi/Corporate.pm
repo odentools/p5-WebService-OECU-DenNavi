@@ -64,11 +64,6 @@ sub fetch_list {
 		}
 	}
 
-	my @arr = $s->_parse_list_page($data);
-	print Dumper \@arr;
-
-	return; # DEBUG
-
 	# Request
 	my $url = $s->_generate_post_url('Search/SearchCorporateList');
 	my $response = $s->{parent}->{ua}->post($url, 
@@ -85,10 +80,10 @@ sub fetch_list {
 		# Retry
 		warn $s->{parent}->login();
 		$query{is_retry} = 1; 
-		$s->fetch(%query);
+		return $s->fetch_list(%query);
 	}
 
-	die $response->as_string();
+	return $s->_parse_list_page($response->decoded_content());
 }
 
 # Parse list page

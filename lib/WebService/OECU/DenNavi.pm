@@ -18,6 +18,7 @@ use URI;
 use Hash::AsObject;
 
 use WebService::OECU::DenNavi::Corporate;
+use WebService::OECU::DenNavi::Visitor;
 
 # Accessors
 __PACKAGE__->mk_accessors( qw/ iter / );
@@ -66,6 +67,7 @@ sub new {
 
 	# Initialize sub objects
 	$self->{corporate} = WebService::OECU::DenNavi::Corporate->new($self);
+	$self->{visitor} = WebService::OECU::DenNavi::Visitor->new($self);
 	
 	# ----------
 
@@ -109,6 +111,11 @@ sub get_session_id {
 # Get a client for corporate
 sub corporate {
 	return shift->{corporate};
+}
+
+# Get a client for visitor
+sub visitor {
+	return shift->{visitor};
 }
 
 # Generate a URL for the POST request
