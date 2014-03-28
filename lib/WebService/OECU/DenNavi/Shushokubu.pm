@@ -150,8 +150,6 @@ sub _parse_detail_page {
 	$tree->parse($html);
 	my $hash = {};
 
-	print $html;
-
 	# Event information
 	my @rows =  $tree->look_down('class', 'detailInfoBody')->find('tr');
 	foreach my $row (@rows) {
