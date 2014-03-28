@@ -16,14 +16,18 @@ use Hash::AsObject;
 use HTML::TreeBuilder;
 use Data::Dumper;
 
+my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
+$year += 1900;
+$mon += 1;
+
 our %SEARCH_QUERY_PARAMS = (
 	Page => 1,
 	SortId => 0,
 	IsAscendingOrder => 'True',
 	DispNumber => 50,
 	VisitorCompName => '',
-	VisitorYear => '2014',
-	VisitorMonth => '2',
+	VisitorYear => $year,
+	VisitorMonth => $mon,
 	visitorGroup => '',
 	IndustrialGroup => '',
 	OccupationGroup => '',
@@ -64,9 +68,9 @@ sub fetch_list {
 
 	if(! $response->is_success){
 		die 'Fetch error: '.$response->as_string();
-	} elsif ($response->title() =~ /ログイン/ && !defined $is_retry) {
+	} elsif (Encode::decode_utf8($response->title()) =~ /ログイン/ && !defined $is_retry) {
 		# Retry
-		warn $s->{parent}->login();
+		$s->{parent}->login();
 		$query{is_retry} = 1; 
 		return $s->fetch_list(%query);
 	}
@@ -92,10 +96,11 @@ sub fetch_detail {
 
 	if(! $response->is_success){
 		die 'Fetch error: '.$response->as_string();
-	} elsif ($response->title() =~ /ログイン/ && !defined $is_retry) {
+	} elsif (Encode::decode_utf8($response->title()) =~ /ログイン/ && !defined $is_retry) {
 		# Retry
-		warn $s->{parent}->login();
-		return $s->fetch_list($visitor_info_id, 1);
+		$s->{parent}->login();
+		warn "Retrying...";
+		return $s->fetch_detail($visitor_info_id, 1);
 	}
 	return $s->_parse_detail_page($response->decoded_content());
 }
@@ -146,7 +151,6 @@ sub _parse_detail_page {
 	my @arr = ();
 	my $tree = HTML::TreeBuilder->new();
 	$tree->parse($html);
-	
 	my $hash = {};
 	my @rows =  $tree->look_down('class', 'detailInfoBody')->find('tr');
 	foreach my $row (@rows) {
@@ -172,7 +176,9 @@ sub _parse_detail_page {
 	@rows =  $tree->look_down('m:id', 'm_entryList')->find('td');
 	foreach my $row (@rows) {
 		if (defined $row) {
-			my $value = Encode::encode_utf8($row->as_text);
+			my $value = Encode::encode_utf8($row->as_HTML('utf8'));
+			$value =~ s/<br( | \/)>/\n\r/g;
+			$value =~ s/<.*?>//g;
 			$hash->{detail} = $value;
 		}
 	}
@@ -181,7 +187,7 @@ sub _parse_detail_page {
 	if (!defined $hash->{name}) {
 		return undef;
 	}
-
+	
 	return $hash;
 }
 
