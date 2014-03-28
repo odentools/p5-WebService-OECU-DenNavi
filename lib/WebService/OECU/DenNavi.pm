@@ -19,6 +19,7 @@ use Hash::AsObject;
 
 use WebService::OECU::DenNavi::Corporate;
 use WebService::OECU::DenNavi::Visitor;
+use WebService::OECU::DenNavi::Shushokubu;
 
 # Accessors
 __PACKAGE__->mk_accessors( qw/ iter / );
@@ -68,6 +69,7 @@ sub new {
 	# Initialize sub objects
 	$self->{corporate} = WebService::OECU::DenNavi::Corporate->new($self);
 	$self->{visitor} = WebService::OECU::DenNavi::Visitor->new($self);
+	$self->{shushokubu} = WebService::OECU::DenNavi::Shushokubu->new($self);
 	
 	# ----------
 
@@ -116,6 +118,11 @@ sub corporate {
 # Get a client for visitor
 sub visitor {
 	return shift->{visitor};
+}
+
+# Get a client for shushokubu (news from shushokubu)
+sub shushokubu {
+	return shift->{shushokubu};
 }
 
 # Generate a URL for the POST request
