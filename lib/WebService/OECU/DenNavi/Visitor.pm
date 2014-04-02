@@ -29,6 +29,7 @@ our %SEARCH_QUERY_PARAMS = (
 	VisitorYear => $year,
 	VisitorMonth => $mon,
 	visitorGroup => '',
+	VisitorPeriod => '0',
 	IndustrialGroup => '',
 	OccupationGroup => '',
 	visitorInfoId => '',

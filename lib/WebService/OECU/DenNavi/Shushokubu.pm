@@ -116,14 +116,14 @@ sub _parse_list_page {
 		if (defined $columns[0] && defined $columns[5]) {
 			# Priority
 			$hash->{priority} = Encode::encode_utf8($columns[0]->as_text);
+			# Event date
+			$hash->{started_at} = Encode::encode_utf8($columns[1]->as_text);
+			# Event type
+			$hash->{type} = Encode::encode_utf8($columns[2]->as_text);
+			# Name
+			$hash->{name} = Encode::encode_utf8($columns[3]->as_text);
 			# Update
 			$hash->{updated_at} = Encode::encode_utf8($columns[1]->as_text);
-			# Event date
-			$hash->{started_at} = Encode::encode_utf8($columns[2]->as_text);
-			# Event type
-			$hash->{type} = Encode::encode_utf8($columns[3]->as_text);
-			# Name
-			$hash->{name} = Encode::encode_utf8($columns[4]->as_text);
 			# ID
 			my $detail_tag = Encode::encode_utf8($columns[5]->as_HTML());
 			#print "$detail_tag\n";
